@@ -21,3 +21,6 @@ def play():
     agent = MiniMaxAgent(game)
     agent.play()
     return jsonify(game.board)
+
+if __name__ == '__main__':
+    app.run(debug=True)
