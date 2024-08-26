@@ -1,50 +1,80 @@
-const qst = document.getElementById("question")
-const submitBtn = document.getElementById("submit")
+const cells = document.querySelectorAll(".cell");
+const statusText = document.querySelector("#statusText");
+const restartBtn = document.querySelector("#restartBtn");
+const winConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+];
+let options = ["", "", "", "", "", "", "", "", ""];
+let currentPlayer = "X";
+let running = false;
 
-submitBtn.addEventListener('click' , ()=> {
-    qst.textContent = "";
-    document.getElementById('form').innerHTML = ""
-    submitBtn.remove();
-})
+initializeGame();
 
+function initializeGame(){
+    cells.forEach(cell => cell.addEventListener("click", cellClicked));
+    restartBtn.addEventListener("click", restartGame);
+    statusText.textContent = `${currentPlayer}'s turn`;
+    running = true;
+}
+function cellClicked(){
+    const cellIndex = this.getAttribute("cellIndex");
 
+    if(options[cellIndex] != "" || !running){
+        return;
+    }
 
-// function sendMove(cellIndex) {
-    
-//     var data = JSON.stringify({
-//         h_symbol: 'X',
-//         c_symbol: 'O',
-//         depth: 9,
-//         size: 3,
-//         board: board
-//     });
+    updateCell(this, cellIndex);
+    checkWinner();
+}
+function updateCell(cell, index){
+    options[index] = currentPlayer;
+    cell.textContent = currentPlayer;
+}
+function changePlayer(){
+    currentPlayer = (currentPlayer == "X") ? "O" : "X";
+    statusText.textContent = `${currentPlayer}'s turn`;
+}
+function checkWinner(){
+    let roundWon = false;
 
-    
-//     var xhr = new XMLHttpRequest();
+    for(let i = 0; i < winConditions.length; i++){
+        const condition = winConditions[i];
+        const cellA = options[condition[0]];
+        const cellB = options[condition[1]];
+        const cellC = options[condition[2]];
 
-    
-//     xhr.open('POST', '/play', true);
+        if(cellA == "" || cellB == "" || cellC == ""){
+            continue;
+        }
+        if(cellA == cellB && cellB == cellC){
+            roundWon = true;
+            break;
+        }
+    }
 
-    
-//     xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-
-    
-//     xhr.onload = function () {
-//         if (xhr.status >= 200 && xhr.status < 300) {
-//             var response = JSON.parse(xhr.responseText);
-//             console.log(response);
-//             updateBoard(response);
-//             checkGameStatus(); 
-//         } else {
-//             console.error('Request failed. Returned status of ' + xhr.status);
-//         }
-//     };
-
-    
-//     xhr.onerror = function () {
-//         console.error('Request failed. Unable to reach the server.');
-//     };
-
-    
-//     xhr.send(data);
-// }
+    if(roundWon){
+        statusText.textContent = `${currentPlayer} wins!`;
+        running = false;
+    }
+    else if(!options.includes("")){
+        statusText.textContent = `Draw!`;
+        running = false;
+    }
+    else{
+        changePlayer();
+    }
+}
+function restartGame(){
+    currentPlayer = "X";
+    options = ["", "", "", "", "", "", "", "", ""];
+    statusText.textContent = `${currentPlayer}'s turn`;
+    cells.forEach(cell => cell.textContent = "");
+    running = true;
+}
