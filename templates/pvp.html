@@ -1,6 +1,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+        <p id="question">Do you want to start first?</p>
+        <form id="form">
+          <input type="radio" name="start" value="yes">Yes<br>
+          <input type="radio" name="start" value="no">No<br>
+        </form>
+      
+        <button id="submit" type="submit" >Submit</button><br><br>
       <div id="cellContainer">
         <div cellIndex="0" class="cell"></div>
         <div cellIndex="1" class="cell"></div>
