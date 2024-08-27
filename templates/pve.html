@@ -4,7 +4,14 @@
 
 {% block content %}
     <h2>Player vs Computer</h2>
-    <div id="game-board"></div>
+    <div>What symbol Do you Want ?</div>
+        <input id="Xsym" type="radio" name="symbol">X
+        <input id="Osym" type="radio" name="symbol">O  
+     <div>Who will strat first </div>
+        <input id="pc" type="radio" name="player">Computer
+        <input id="player" type="radio" name="player">Player 
+    <button type="submit" id="startBtn" >Start Playing !</button>
+
 {% endblock %}
 
 {% block scripts %}
