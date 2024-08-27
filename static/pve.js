@@ -63,9 +63,7 @@ const data = {
 };
 
 
-document.getElementById('startGame').addEventListener('click', function() {
-    window.location.href = 'pveGame.html';  
-});
+
 
 fetch('/pve', {
     method: 'POST', 
