@@ -1,26 +1,31 @@
 {% extends 'base.html' %}
 
-{% block content %}
+{% block title %}Player vs Player - Tic-Tac-Toe{% endblock %}
 
-        <p id="question">Do you want to start first?</p>
-        <form id="form">
-          <input type="radio" name="start" value="yes">Yes<br>
-          <input type="radio" name="start" value="no">No<br>
-        </form>
-      
-        <button id="submit" type="submit" >Submit</button><br><br>
+{% block styles %}
+    <link rel="stylesheet" href="/static/style.css"> 
+{% endblock %}
+
+{% block content %}
+    <div id="gameContainer">
+      <h1>Tic Tac Toe Game</h1>
       <div id="cellContainer">
-        <div cellIndex="0" class="cell"></div>
-        <div cellIndex="1" class="cell"></div>
-        <div cellIndex="2" class="cell"></div>
-        <div cellIndex="3" class="cell"></div>
-        <div cellIndex="4" class="cell"></div>
-        <div cellIndex="5" class="cell"></div>
-        <div cellIndex="6" class="cell"></div>
-        <div cellIndex="7" class="cell"></div>
-        <div cellIndex="8" class="cell"></div>
+          <div cellIndex="0" class="cell"></div>
+          <div cellIndex="1" class="cell"></div>
+          <div cellIndex="2" class="cell"></div>
+          <div cellIndex="3" class="cell"></div>
+          <div cellIndex="4" class="cell"></div>
+          <div cellIndex="5" class="cell"></div>
+          <div cellIndex="6" class="cell"></div>
+          <div cellIndex="7" class="cell"></div>
+          <div cellIndex="8" class="cell"></div>
       </div>
       <h2 id="statusText"></h2>
       <button id="restartBtn">Restart</button>
-    </div>
+  </div>
 {% endblock %}
+
+{% block scripts %}
+<script src="/static/pvp.js"></script>
+{% endblock %}
+
