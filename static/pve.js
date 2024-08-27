@@ -1,6 +1,3 @@
-
-
-
 let Xsym = document.getElementById('Xsym');
 let Osym = document.getElementById('Osym');
 let player = document.getElementById('player');

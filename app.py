@@ -13,8 +13,10 @@ def index():
 def pvp():
     return render_template('pvp.html')
 
-@app.route('/pve', methods=["POST"])
+@app.route('/pve', methods=["POST", "GET"])
 def pve():
+    if request.method == 'GET':
+        return render_template('pve.html')
     data = request.get_json()
     h_symbol = data['h_symbol']
     c_symbol = data['c_symbol']
@@ -27,8 +29,10 @@ def pve():
 
     return jsonify({'board': game.board, 'game_over': game.game_over(game.board), 'winner': None})
 
-@app.route('/pve/play', methods=['POST'])
+@app.route('/pve/play', methods=['POST', 'GET'])
 def play():
+    if request.method == 'GET':
+        return render_template('pve.html')
     data = request.get_json()
     board = data['board']
     h_symbol = data['h_symbol']
@@ -50,3 +54,4 @@ def play():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
