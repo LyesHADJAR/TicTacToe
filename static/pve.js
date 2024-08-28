@@ -53,13 +53,28 @@ if(first_player == 'computer' && chosen_move == 'O'){
     first_Move = 'computer';
 }
 
+
+
+
+let startBtn = document.getElementById('startBtn');
+let cellContainer = document.getElementById('cellContainer');
+let restartBtn = document.getElementById('restartBtn');
+let dialogueContainer = document.getElementById('dialogueContainer');
+
+startBtn.addEventListener('click' , ()=>{
+    cellContainer.style.display = 'grid';
+    restartBtn.style.display = 'block';
+    dialogueContainer.style.display = 'none';
+
+
+    
+})
+
 const data = {
     h_symbol: Human_symbol,         
     c_symbol: Pc_symbol,          
     first_move: first_Move  
 };
-
-
 
 
 fetch('/pve', {
@@ -71,7 +86,7 @@ fetch('/pve', {
 })
 .then(response => response.json()) // Parse the response JSON
 .then(data => {
-    //handleing the sent data (i need to see that dat format in teh consle but because of that one problem i can't)
+    //handling the sent data (i need to see the data format in the console but because of that one problem i can't)
     console.log(data);
 })
 .catch(error => {
@@ -80,4 +95,4 @@ fetch('/pve', {
 });
 
 
-//other fetch calls are pretyy similar but haven't implemnted them yet im still trying to figure why the page isnt shwowing up
+//other fetch calls are pretty similar , but i must handle the first response to move to the other
