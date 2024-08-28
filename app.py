@@ -15,19 +15,25 @@ def pvp():
 
 @app.route('/pve', methods=["POST", "GET"])
 def pve():
-    if request.method == 'GET':
-        return render_template('pve.html')
-    data = request.get_json()
-    h_symbol = data['h_symbol']
-    c_symbol = data['c_symbol']
-    first_move = data['first_move']
-    game = TicTacToe(h_symbol, c_symbol, 9, 9)
+    try: #added a try-catch block to handle any errors
+        if request.method == 'GET':
+            return render_template('pve.html')
+        data = request.get_json()
+        if not data:
+            raise ValueError("No JSON data received") #to signal that the data was not recieved 
+        h_symbol = data['h_symbol']
+        c_symbol = data['c_symbol']
+        first_move = data['first_move']
+        game = TicTacToe(h_symbol, c_symbol, 9, 9)
 
-    if first_move == 'computer':
-        agent = MiniMaxAgent(game)
-        agent.play()
+        if first_move == 'computer':
+            agent = MiniMaxAgent(game)
+            agent.play()
 
-    return jsonify({'board': game.board, 'game_over': game.game_over(game.board), 'winner': None})
+        return jsonify({'board': game.board, 'game_over': game.game_over(game.board), 'winner': None})
+    except Exception as e:
+        app.logger.error(f"Error in /pve route: {e}")  #handle the error if it throws any 
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/pve/play', methods=['POST', 'GET'])
 def play():
@@ -54,4 +60,5 @@ def play():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
