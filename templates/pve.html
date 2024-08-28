@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}Player vs Computer - Tic-Tac-Toe{% endblock %}
+{% block styles %} <link rel="stylesheet" href="/static/style.css">{% endblock %}
 
 {% block content %}
     <h2>Player vs Computer</h2>
+<div id="dialogueContainer">
     <div>What symbol Do you Want ?</div>
         <input id="Xsym" type="radio" name="symbol">X
         <input id="Osym" type="radio" name="symbol">O  
@@ -11,6 +13,22 @@
         <input id="pc" type="radio" name="player">Computer
         <input id="player" type="radio" name="player">Player 
     <button type="submit" id="startBtn" >Start Playing !</button>
+</div>
+
+
+    <div  id="cellContainer"  style="display: none;">
+        <div cellIndex="0" class="cell" ></div>
+        <div cellIndex="1" class="cell"></div>
+        <div cellIndex="2" class="cell"></div>
+        <div cellIndex="3" class="cell"></div>
+        <div cellIndex="4" class="cell"></div>
+        <div cellIndex="5" class="cell"></div>
+        <div cellIndex="6" class="cell"></div>
+        <div cellIndex="7" class="cell"></div>
+        <div cellIndex="8" class="cell"></div>
+    </div>
+    <h2 id="statusText"></h2>
+    <button id="restartBtn" style="display: none;">Restart</button>
 
 {% endblock %}
 
