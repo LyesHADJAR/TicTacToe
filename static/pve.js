@@ -16,15 +16,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameInProgress = false;
 
     startBtn.addEventListener('click', () => {
-        hSymbol = document.querySelector('input[name="symbol"]:checked')?.nextSibling.nodeValue.trim(); // selected
-        // the checked input with name "symbol"and  then get and trim the text content of its next (sibling )the elemnts following itt 
+        hSymbol = document.querySelector('input[name="symbol"]:checked')?.nextSibling.nodeValue.trim();
+        cSymbol = hSymbol === 'X' ? 'O' : 'X';
+        const firstMoveElement = document.querySelector('input[name="player"]:checked');
+        if (firstMoveElement) {
+            firstMove = firstMoveElement.id === 'pc' ? 'computer' : 'player';
+        } else {
+            firstMove = '';
+        }
 
-        cSymbol = hSymbol === 'X' ? 'O' : 'X'; // set computer symbol as the other one
-        firstMove = document.querySelector('input[name="player"]:checked')?.nextSibling.nodeValue.trim();
 
         if (!hSymbol || !firstMove) {
             alert('Please select both symbol and who starts first!');
-            return; //for now this is a convention
+            return;
         }
 
         fetch('/pve', {
@@ -36,23 +40,24 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Initial game state:', data);// i added this to show up on the console so i can see the data and how to handle it bcs i keep getting two answers from the server
+            console.log('Initial game state:', data);
             board = data.board;
             updateBoardUI(board);
             gameInProgress = true;
 
+            cellContainer.style.display = 'grid';
+
             if (firstMove === 'computer') {
-                handleComputerMove(); 
+                statusText.textContent = 'Computer is thinking...'; // Already handled by backend
             } else {
-                cellContainer.style.display = 'grid';
                 statusText.textContent = 'Your turn!';
             }
         })
         .catch(error => console.error('Error:', error));
     });
 
-    function handleComputerMove() { //function to handle the pc move
-        fetch('/pve/play', { //even for the first move i sent the data to the second endpoint since teh fetched data from the server is kinda of the initial state of the board if the computer is first ofc
+    function handleComputerMove() {
+        fetch('/pve/play', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -64,33 +69,39 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Computer move:', data);
             board = data.board;
             updateBoardUI(board);
-
+            
             if (data.game_over) {
-                const winnerSymbol = data.winner === 1 ? cSymbol : (data.winner === -1 ? hSymbol : null); //not sure of this one since i read the game's python code and it seems liek it interperts 1 as pc sign and -1 as huiman sign
+                const winnerSymbol = data.winner? cSymbol : (data.winner == false ? hSymbol : null);
                 if (winnerSymbol) {
                     statusText.textContent = winnerSymbol === hSymbol ? 'Congratulations! You won!' : 'Game Over! Computer won!';
                 } else {
-                    statusText.textContent = 'Game Over! It\'s a draw!';
+                    statusText.textContent = `Game Over! It's a draw!`;
                 }
                 restartBtn.style.display = 'block';
-                gameInProgress = false; 
+                gameInProgress = false;
             } else {
                 statusText.textContent = 'Your turn!';
             }
         })
         .catch(error => console.error('Error:', error));
     }
-
     function makeMove(index) {
-        if (!gameInProgress) return; // prevent moves if the game is not in progress
-
-        const row = Math.floor(index / 3); //to find indexes according to 2D array in js 
+        console.log("Before player's move (initial board state):", JSON.parse(JSON.stringify(board))); // Deep copy to ensure no mutation
+    
+        if (!gameInProgress) return;
+    
+        const row = Math.floor(index / 3);
         const col = index % 3;
-
-        if (board[row][col] !== 0) return; // cell already taken
-
-        board[row][col] = (hSymbol === 'X') ? -1 : 1; // Update board with player's move
-
+    
+        if (board[row][col] !== 0) return;
+    
+       
+        board[row][col] = -1;
+    
+        updateBoardUI(board);
+        //before sending to the server
+        console.log("Before sending player's move to server:", JSON.parse(JSON.stringify(board)));
+    
         fetch('/pve/play', {
             method: 'POST',
             headers: {
@@ -100,39 +111,33 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('After player move:', data);
+            console.log('After player move (server response - computer move):', data);
+
             board = data.board;
             updateBoardUI(board);
-
+    
             if (data.game_over) {
-                const winnerSymbol = data.winner === 1 ? cSymbol : (data.winner === -1 ? hSymbol : null);
+                //here in saw that the winner is a boolean value so i only was able to interpert the cases where teh computer/teh player won
+                const winnerSymbol = data.winner? cSymbol : (data.winner == false ? hSymbol : null);
                 if (winnerSymbol) {
                     statusText.textContent = winnerSymbol === hSymbol ? 'Congratulations! You won!' : 'Game Over! Computer won!';
                 } else {
-                    statusText.textContent = 'Game Over! It\'s a draw!';
+                    statusText.textContent = `Game Over! It's a draw!`;
                 }
                 restartBtn.style.display = 'block';
-                gameInProgress = false; 
+                gameInProgress = false;
             } else {
-                handleComputerMove(); // proceed with computer move
+                // if the game is not over, it's the player's turn
+                statusText.textContent = 'Your turn!';
             }
         })
         .catch(error => console.error('Error:', error));
     }
+    
 
 
-    //restarst btn
     restartBtn.addEventListener('click', () => {
-        board = [
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0]
-        ];
-        updateBoardUI(board);
-        cellContainer.style.display = 'grid';
-        statusText.textContent = 'Your turn!';
-        restartBtn.style.display = 'none';
-        gameInProgress = true; 
+        window.location.href = '/pve';
     });
 
     function updateBoardUI(board) {
@@ -141,8 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cellElem = document.querySelector(`.cell[cellIndex="${rowIndex * 3 + cellIndex}"]`);
                 cellElem.textContent = cell === 1 ? cSymbol : cell === -1 ? hSymbol : '';
                 cellElem.classList.toggle('taken', cell !== 0);
-                // selecting the correct cell element corresponding to the current row and column in a 3x3 grid using the cellIndex (according to js matrix)
-
             });
         });
     }
@@ -151,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.addEventListener('click', () => makeMove(index));
     });
 });
-
 
 
  
