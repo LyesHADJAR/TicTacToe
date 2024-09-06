@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameInProgress = false;
 
     startBtn.addEventListener('click', () => {
+        startBtn.textContent = 'Play again !';
         hSymbol = document.querySelector('input[name="symbol"]:checked')?.nextSibling.nodeValue.trim();
         cSymbol = hSymbol === 'X' ? 'O' : 'X';
         const firstMoveElement = document.querySelector('input[name="player"]:checked');
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cellContainer.style.display = 'grid';
 
             if (firstMove === 'computer') {
-                statusText.textContent = 'Computer is thinking...'; // already handled by backend
+                statusText.textContent = 'Computer is thinking...'; 
             } else {
                 statusText.textContent = 'Your turn!';
             }
@@ -71,11 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
             updateBoardUI(board);
             
             if (data.game_over) {
-                const winnerSymbol = data.winner? cSymbol : (data.winner == false ? hSymbol : null);
-                if (winnerSymbol) {
-                    statusText.textContent = winnerSymbol === hSymbol ? 'Congratulations! You won!' : 'Game Over! Computer won!';
-                } else {
+                if (data.winner === true) {
+                    statusText.textContent = `Game Over! Computer won!`;
+                } else if (data.winner === null) {
                     statusText.textContent = `Game Over! It's a draw!`;
+                } else if (data.winner === false) {
+                    statusText.textContent = `Congratulations! You won!`;
                 }
                 restartBtn.style.display = 'block';
                 gameInProgress = false;
@@ -117,19 +119,22 @@ document.addEventListener('DOMContentLoaded', () => {
             updateBoardUI(board);
     
             if (data.game_over) {
-                //here in saw that the winner is a boolean value so i only was able to interpert the cases where teh computer/teh player won
-                const winnerSymbol = data.winner? cSymbol : (data.winner == false ? hSymbol : null);
-                if (winnerSymbol) {
-                    statusText.textContent = winnerSymbol === hSymbol ? 'Congratulations! You won!' : 'Game Over! Computer won!';
-                } else {
+
+                if (data.winner === true) {
+                    statusText.textContent = 'Game Over! Computer won!';
+                } else if (data.winner === false) {
+                    statusText.textContent = 'Congratulations! You won!';
+                } else if (data.winner === null) {
                     statusText.textContent = `Game Over! It's a draw!`;
                 }
+                
                 restartBtn.style.display = 'block';
                 gameInProgress = false;
             } else {
-                // if the game is not over, it's the player's turn
+                
                 statusText.textContent = 'Your turn!';
             }
+            
         })
         .catch(error => console.error('Error:', error));
     }
@@ -154,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.addEventListener('click', () => makeMove(index));
     });
 });
-
 
  
 
