@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cellContainer.style.display = 'grid';
 
             if (firstMove === 'computer') {
-                statusText.textContent = 'Computer is thinking...'; // Already handled by backend
+                statusText.textContent = 'Computer is thinking...'; // already handled by backend
             } else {
                 statusText.textContent = 'Your turn!';
             }
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error:', error));
     }
     function makeMove(index) {
-        console.log("Before player's move (initial board state):", JSON.parse(JSON.stringify(board))); // Deep copy to ensure no mutation
+        console.log("Before player's move (initial board state):", JSON.parse(JSON.stringify(board))); // deep copy to ensure no mutation
     
         if (!gameInProgress) return;
     
