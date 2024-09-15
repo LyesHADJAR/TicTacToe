@@ -17,26 +17,26 @@ body {
 
 #heading {
     font-family: 'HopesAndDreams', sans-serif;
-    font-size: 5em; /* Adjust as needed for larger font */
+    font-size: 5em; 
     color: black;
     text-align: center;
-    margin-bottom: 30px; /* Space between heading and buttons */
+    margin-bottom: 30px; 
 }
 
 button {
     font-family: 'Poppins', sans-serif;
-    font-size: 1.5em; /* Larger font size for buttons */
-    font-weight: bold; /* Make text bold for better readability */
+    font-size: 1.5em; 
+    font-weight: bold; 
     background-color: pink;
     border: none;
-    padding: 15px 30px; /* Adjust padding for larger buttons */
-    margin: 10px; /* Space between buttons */
+    padding: 15px 30px; 
+    margin: 10px; 
     cursor: pointer;
-    border-radius: 5px; /* Optional: Rounded corners */
+    border-radius: 5px; 
 }
 
 button:hover {
-    background-color: lightcoral; /* Optional: Change color on hover */
+    background-color: lightcoral; 
 }
 
 #gameContainer {
