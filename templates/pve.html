@@ -6,14 +6,17 @@
 {% block content %}
     <h2>Player vs Computer</h2>
 <div id="dialogueContainer">
-    <div>What symbol Do you Want ?</div>
+    <div class="text">What symbol Do you Want ?</div>
         <input id="Xsym" type="radio" name="symbol">X
         <input id="Osym" type="radio" name="symbol">O  
-     <div>Who will strat first </div>
+     <div class="text">Who will start first </div>
         <input id="pc" type="radio" name="player">Computer
-        <input id="player" type="radio" name="player">Player 
-    <button type="submit" id="startBtn" >Start Playing !</button>
-</div>
+        <input id="player" type="radio" name="player">Player
+</div> 
+        <div id="buttonContainer">
+             <button type="submit" id="startBtn" >Start Playing !</button>
+        </div>
+
 
 
     <div  id="cellContainer"  style="display: none;">
