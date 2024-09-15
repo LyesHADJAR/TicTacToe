@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const cellContainer = document.getElementById('cellContainer');
     const statusText = document.getElementById('statusText');
     const cells = document.querySelectorAll('.cell');
+    const text = document.getElementById('dialogueContainer');
+
 
     let hSymbol = '';
     let cSymbol = '';
@@ -17,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startBtn.addEventListener('click', () => {
         startBtn.textContent = 'Play again !';
+        text.style.display = 'none';
         hSymbol = document.querySelector('input[name="symbol"]:checked')?.nextSibling.nodeValue.trim();
         cSymbol = hSymbol === 'X' ? 'O' : 'X';
         const firstMoveElement = document.querySelector('input[name="player"]:checked');
