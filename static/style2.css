@@ -2,38 +2,125 @@
     font-family: 'HopesAndDreams';
     src: url('fonts/hopesanddreams-4ngdw.otf') format('opentype');
 }
+
+h2 {
+    font-family: 'HopesAndDreams', sans-serif;
+    font-size: 5em; 
+    color: black;
+    text-align: center;
+}
+
 body {
     background: rgb(238,174,202);
     background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    
-}
-.cell{
-    width: 75px;
-    height: 75px;
-    border: 2px solid;
-    box-shadow: 0 0 0 2px;
-    line-height: 75px;
-    font-size: 50px;
-    cursor: pointer;
-}
-#gameContainer  h1{
-    font-family: "HopesAndDreams";
-    text-align: center;
-}
-#gameContainer  {
-    font-family: "Poppins" , "sans-serif";
-    text-align: center;
-    font-weight: 100px;
-}
-#startBtn {
-    font-family: "Poppins" , "sans-serif";
-    font-weight: 100px;
-    background-color: pink;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
-#cellContainer{
-    grid-template-columns: repeat(3, auto);
-    width: 225px;
-    margin: auto;
+#dialogueContainer {
+    text-align: center;
+    font-size: 1.5em; 
+    margin-bottom: 30px; 
+}
+
+#dialogueContainer .text {
+    font-size: 50px;
+}
+
+#dialogueContainer #text{
+    font-size: 2em;
+}
+
+input[type='radio']{
+    -webkit-appearance: none; 
+    appearance: none;
+    width: 30px; 
+    height: 30px; 
+    border-radius: 50%; 
+    border: 2px solid black; 
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    margin: 0 10px
+}
+input[type="radio"]:checked::before {
+    content: ''; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px; 
+    height: 20px; 
+    background-color: black; 
+    border-radius: 50%; 
+    transform: translate(-50%, -50%);
+}
+#buttonContainer{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+button {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5em; 
+    font-weight: bold; 
+    background-color: pink;
+    border: none;
+    padding: 15px 30px; 
+    cursor: pointer;
+    border-radius: 5px; 
+}
+
+button:hover {
+    background-color: lightcoral; 
+}
+
+#gameContainer {
+    text-align: center;
+}
+
+#cellContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 12px; 
+    width: 500px; 
+    margin: 0 auto; 
+}
+
+.cell {
+    width: 100%;
+    height: 160px; 
+    border: 2px solid;
+    box-shadow: 0 0 0 2px;
+    line-height: 100px; 
+    font-size: 100px; 
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins';
+}
+
+#statusText {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2em; 
+    color: black;
+    margin: 20px 0; 
+}
+
+#restartBtn {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5em; 
+    font-weight: bold; 
+    background-color: pink;
+    border: none;
+    padding: 15px 30px; 
+    cursor: pointer;
+    border-radius: 5px; 
+    display: none; 
 }
