@@ -1,12 +1,14 @@
-<!-- # This is the home page
-# We need to create where the user is welcomed
-# and can choose between the PvP mode or PvE mode -->
 {% extends 'base.html' %}
+{% block styles %}<link rel="stylesheet" href="/static/styleIndex.css">{% endblock %}
 
 {% block title %}Home - Tic-Tac-Toe{% endblock %}
 
 {% block content %}
-    <h2>Welcome to Tic-Tac-Toe</h2>
-    <button onclick="window.location.href='/pvp'">Player vs Player</button>
-    <button onclick="window.location.href='/pve'">Player vs Computer</button>
+<div id="gameContainer">
+    <h2 id="heading">TIC TAC TOE</h2>
+    <div id="buttonsContainer">
+        <button onclick="window.location.href='/pvp'">Player vs Player</button>
+        <button onclick="window.location.href='/pve'">Player vs Computer</button>
+    </div>
+</div>
 {% endblock %}
