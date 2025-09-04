@@ -6,15 +6,28 @@
 {% block content %}
     <h2>Player vs Computer</h2>
 <div id="dialogueContainer">
-    <div class="text">What symbol Do you Want ?</div>
-        <input id="Xsym" type="radio" name="symbol">X
-        <input id="Osym" type="radio" name="symbol">O  
-     <div class="text">Who will start first </div>
-        <input id="pc" type="radio" name="player">Computer
-        <input id="player" type="radio" name="player">Player
+    <div class="radio-group">
+        <div class="text">Choose your Symbol</div>
+        <label for="Xsym">
+            <input id="Xsym" type="radio" name="symbol">X
+        </label>
+        <label for="Osym">
+            <input id="Osym" type="radio" name="symbol">O
+        </label>
+    </div>
+    
+    <div class="radio-group">
+        <div class="text">Who will start first?</div>
+        <label for="pc">
+            <input id="pc" type="radio" name="player">Computer
+        </label>
+        <label for="player">
+            <input id="player" type="radio" name="player">Player
+        </label>
+    </div>
 </div> 
         <div id="buttonContainer">
-             <button type="submit" id="startBtn" >Start Playing !</button>
+             <button type="submit" id="startBtn" >Start Game</button>
         </div>
 
 

@@ -1,7 +1,3 @@
-from math import inf as infinity
-import random
-import platform
-from os import system
 from minimax import MiniMaxAgent
 
 class TicTacToe():
@@ -90,6 +86,8 @@ class TicTacToe():
         """
         Clears the console
         """
+        import platform
+        from os import system
         os_name = platform.system().lower()
         if 'windows' in os_name:
             system('cls')

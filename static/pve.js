@@ -16,11 +16,25 @@ document.addEventListener('DOMContentLoaded', () => {
         [0, 0, 0]
     ];
     let gameInProgress = false;
+    let gameStats = {
+        wins: 0,
+        losses: 0,
+        draws: 0,
+        totalGames: 0
+    };
+
+    // Load stats from localStorage
+    const savedStats = localStorage.getItem('tictactoeStats');
+    if (savedStats) {
+        gameStats = JSON.parse(savedStats);
+    }
 
     startBtn.addEventListener('click', () => {
-        startBtn.textContent = 'Play again !';
+        startBtn.textContent = 'Starting...';
+        startBtn.disabled = true;
         text.style.display = 'none';
-        hSymbol = document.querySelector('input[name="symbol"]:checked')?.nextSibling.nodeValue.trim();
+        const symbolInput = document.querySelector('input[name="symbol"]:checked');
+        hSymbol = symbolInput ? symbolInput.nextSibling.textContent.trim() : '';
         cSymbol = hSymbol === 'X' ? 'O' : 'X';
         const firstMoveElement = document.querySelector('input[name="player"]:checked');
         if (firstMoveElement) {
@@ -42,8 +56,16 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: JSON.stringify({ h_symbol: hSymbol, c_symbol: cSymbol, first_move: firstMove })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
             console.log('Initial game state:', data);
             board = data.board;
             updateBoardUI(board);
@@ -52,12 +74,20 @@ document.addEventListener('DOMContentLoaded', () => {
             cellContainer.style.display = 'grid';
 
             if (firstMove === 'computer') {
-                statusText.textContent = 'Computer is thinking...'; 
+                statusText.textContent = 'Computer Played'; 
             } else {
                 statusText.textContent = 'Your turn!';
             }
+            startBtn.textContent = 'Play again';
+            startBtn.disabled = false;
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error starting game:', error);
+            statusText.textContent = `Error: ${error.message}`;
+            text.style.display = 'block';
+            startBtn.textContent = 'Start Game';
+            startBtn.disabled = false;
+        });
     });
 
     function handleComputerMove() {
@@ -68,19 +98,28 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: JSON.stringify({ board, h_symbol: hSymbol, c_symbol: cSymbol })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
             console.log('Computer move:', data);
             board = data.board;
             updateBoardUI(board);
             
             if (data.game_over) {
-                if (data.winner === true) {
-                    statusText.textContent = `Game Over! Computer won!`;
+                updateGameStats(data.winner, hSymbol);
+                if (data.winner === cSymbol) {
+                    statusText.textContent = `Game Over! Computer won! (W:${gameStats.wins} L:${gameStats.losses} D:${gameStats.draws})`;
+                } else if (data.winner === hSymbol) {
+                    statusText.textContent = `Congratulations! You won! (W:${gameStats.wins} L:${gameStats.losses} D:${gameStats.draws})`;
                 } else if (data.winner === null) {
-                    statusText.textContent = `Game Over! It's a draw!`;
-                } else if (data.winner === false) {
-                    statusText.textContent = `Congratulations! You won!`;
+                    statusText.textContent = `Game Over! It's a draw! (W:${gameStats.wins} L:${gameStats.losses} D:${gameStats.draws})`;
                 }
                 restartBtn.style.display = 'block';
                 gameInProgress = false;
@@ -88,7 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 statusText.textContent = 'Your turn!';
             }
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error making computer move:', error);
+            statusText.textContent = `Error: ${error.message}`;
+        });
     }
     function makeMove(index) {
         console.log("Before player's move (initial board state):", JSON.parse(JSON.stringify(board))); // deep copy to ensure no mutation
@@ -114,32 +156,44 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             body: JSON.stringify({ board, h_symbol: hSymbol, c_symbol: cSymbol })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
+            if (data.error) {
+                throw new Error(data.error);
+            }
             console.log('After player move (server response - computer move):', data);
 
             board = data.board;
             updateBoardUI(board);
     
             if (data.game_over) {
-
-                if (data.winner === true) {
-                    statusText.textContent = 'Game Over! Computer won!';
-                } else if (data.winner === false) {
-                    statusText.textContent = 'Congratulations! You won!';
+                updateGameStats(data.winner, hSymbol);
+                if (data.winner === cSymbol) {
+                    statusText.textContent = `Game Over! Computer won! (W:${gameStats.wins} L:${gameStats.losses} D:${gameStats.draws})`;
+                } else if (data.winner === hSymbol) {
+                    statusText.textContent = `Congratulations! You won! (W:${gameStats.wins} L:${gameStats.losses} D:${gameStats.draws})`;
                 } else if (data.winner === null) {
-                    statusText.textContent = `Game Over! It's a draw!`;
+                    statusText.textContent = `Game Over! It's a draw! (W:${gameStats.wins} L:${gameStats.losses} D:${gameStats.draws})`;
                 }
                 
                 restartBtn.style.display = 'block';
                 gameInProgress = false;
             } else {
-                
                 statusText.textContent = 'Your turn!';
             }
-            
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error making player move:', error);
+            statusText.textContent = `Error: ${error.message}`;
+            // Revert the move on error
+            board[row][col] = 0;
+            updateBoardUI(board);
+        });
     }
     
 
@@ -147,6 +201,18 @@ document.addEventListener('DOMContentLoaded', () => {
     restartBtn.addEventListener('click', () => {
         window.location.href = '/pve';
     });
+
+    function updateGameStats(winner, humanSymbol) {
+        gameStats.totalGames++;
+        if (winner === humanSymbol) {
+            gameStats.wins++;
+        } else if (winner === cSymbol) {
+            gameStats.losses++;
+        } else {
+            gameStats.draws++;
+        }
+        localStorage.setItem('tictactoeStats', JSON.stringify(gameStats));
+    }
 
     function updateBoardUI(board) {
         board.forEach((row, rowIndex) => {
